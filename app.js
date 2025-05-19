@@ -126,6 +126,19 @@ function iniciarApp() {
   app.appendChild(canvasContainer);
   document.body.appendChild(app);
 
+  // Filtros arriba de la lista
+  const filtros = document.createElement('div');
+  filtros.style.cssText = 'display:flex; gap:10px; margin-bottom:10px;';
+  filtros.innerHTML = `
+    <input id="buscar" type="text" placeholder="Buscar..." style="flex:2; padding:8px; border-radius:6px; border:1px solid #ccc;">
+    <select id="tipoFiltro" style="flex:1; padding:8px; border-radius:6px; border:1px solid #ccc;">
+      <option value="">Todos</option>
+      <option value="ingreso">Ingresos</option>
+      <option value="gasto">Gastos</option>
+    </select>
+  `;
+  app.insertBefore(filtros, list);
+
   // ==== LÓGICA ====
 
   let transacciones = JSON.parse(localStorage.getItem('transacciones')) || [];
@@ -140,7 +153,7 @@ function iniciarApp() {
     let ingresos = 0;
     let gastos = 0;
 
-    transacciones.forEach((t, i) => {
+    (filtrarTransacciones()).forEach((t, i) => {
       total += t.monto;
       if (t.monto >= 0) ingresos += t.monto;
       else gastos += Math.abs(t.monto);
@@ -228,6 +241,16 @@ function iniciarApp() {
     form.reset();
   }
 
+  // Filtros
+  function filtrarTransacciones() {
+    const texto = document.getElementById('buscar').value.toLowerCase();
+    const tipo = document.getElementById('tipoFiltro').value;
+    return transacciones.filter(t =>
+      t.descripcion.toLowerCase().includes(texto) &&
+      (tipo === '' || (tipo === 'ingreso' && t.monto >= 0) || (tipo === 'gasto' && t.monto < 0))
+    );
+  }
+
   // ==== GRÁFICOS ====
   let barChart;
 
@@ -308,6 +331,9 @@ function iniciarApp() {
     }
   `;
   document.head.appendChild(style);
+
+  document.getElementById('buscar').oninput = actualizarUI;
+  document.getElementById('tipoFiltro').onchange = actualizarUI;
 
   actualizarUI();
 }
