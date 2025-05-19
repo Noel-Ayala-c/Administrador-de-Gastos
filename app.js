@@ -54,6 +54,37 @@ function iniciarApp() {
   exportBtn.style.cssText = 'margin-left: 10px; background: #2980b9; color: #fff; border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer;';
   header.appendChild(exportBtn);
 
+  // Formulario de perfil
+  const perfilBtn = document.createElement('button');
+  perfilBtn.innerHTML = '<i class="fa-solid fa-user"></i>';
+  perfilBtn.style.cssText = 'margin-left:10px;background:none;border:none;font-size:1.2em;cursor:pointer;';
+  header.appendChild(perfilBtn);
+
+  const perfilModal = document.createElement('div');
+  perfilModal.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);justify-content:center;align-items:center;z-index:10000;';
+  perfilModal.innerHTML = `
+    <div style="background:#fff;padding:30px;border-radius:12px;min-width:300px;position:relative;">
+      <button id="cerrarPerfil" style="position:absolute;top:10px;right:10px;background:none;border:none;font-size:1.2em;">✖</button>
+      <h3>Perfil</h3>
+      <input id="nombrePerfil" type="text" placeholder="Tu nombre" style="width:100%;padding:8px;margin-bottom:10px;">
+      <input id="fotoPerfil" type="file" accept="image/*" style="margin-bottom:10px;">
+      <button id="guardarPerfil" style="width:100%;padding:10px;background:#27ae60;color:#fff;border:none;border-radius:8px;">Guardar</button>
+    </div>
+  `;
+  document.body.appendChild(perfilModal);
+
+  perfilBtn.onclick = () => perfilModal.style.display = 'flex';
+  perfilModal.querySelector('#cerrarPerfil').onclick = () => perfilModal.style.display = 'none';
+  perfilModal.querySelector('#guardarPerfil').onclick = () => {
+    localStorage.setItem('nombrePerfil', perfilModal.querySelector('#nombrePerfil').value);
+    // Puedes guardar la foto como base64 si quieres
+    perfilModal.style.display = 'none';
+    actualizarUI();
+  };
+
+  const nombre = localStorage.getItem('nombrePerfil');
+  if (nombre) header.innerHTML += `<div style="font-size:1em;color:#888;">Hola, ${nombre}!</div>`;
+
   const balanceDisplay = document.createElement('h3');
   balanceDisplay.textContent = 'Balance: S/ 0.00';
   balanceDisplay.style.cssText = `text-align: center; color: #2c3e50; font-size: 1.2em;`;
