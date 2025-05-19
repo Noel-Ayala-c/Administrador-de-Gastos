@@ -48,6 +48,12 @@ function iniciarApp() {
   `;
   header.appendChild(darkModeBtn);
 
+  // Botón de exportar CSV
+  const exportBtn = document.createElement('button');
+  exportBtn.innerHTML = '<i class="fa-solid fa-file-csv"></i> Exportar CSV';
+  exportBtn.style.cssText = 'margin-left: 10px; background: #2980b9; color: #fff; border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer;';
+  header.appendChild(exportBtn);
+
   const balanceDisplay = document.createElement('h3');
   balanceDisplay.textContent = 'Balance: S/ 0.00';
   balanceDisplay.style.cssText = `text-align: center; color: #2c3e50; font-size: 1.2em;`;
