@@ -139,6 +139,14 @@ function iniciarApp() {
   `;
   app.insertBefore(filtros, list);
 
+  // Selector de mes y año
+  const fechaFiltro = document.createElement('div');
+  fechaFiltro.style.cssText = 'display:flex;gap:10px;margin-bottom:10px;';
+  fechaFiltro.innerHTML = `
+    <input type="month" id="mesFiltro" style="padding:8px;border-radius:6px;border:1px solid #ccc;">
+  `;
+  app.insertBefore(fechaFiltro, filtros);
+
   // ==== LÓGICA ====
 
   let transacciones = JSON.parse(localStorage.getItem('transacciones')) || [];
@@ -236,7 +244,8 @@ function iniciarApp() {
     transacciones.push({
       descripcion: desc,
       monto: tipo === 'ingreso' ? monto : -monto,
-      categoria: document.getElementById('categoria').value
+      categoria: document.getElementById('categoria').value,
+      fecha: new Date().toISOString()
     });
     guardarTransacciones();
     actualizarUI();
@@ -248,10 +257,15 @@ function iniciarApp() {
   function filtrarTransacciones() {
     const texto = document.getElementById('buscar').value.toLowerCase();
     const tipo = document.getElementById('tipoFiltro').value;
+    const mes = document.getElementById('mesFiltro').value;
     return transacciones.filter(t =>
       t.descripcion.toLowerCase().includes(texto) &&
       (tipo === '' || (tipo === 'ingreso' && t.monto >= 0) || (tipo === 'gasto' && t.monto < 0))
-    );
+    ).filter(t => {
+      if (!mes) return true;
+      const fecha = t.fecha ? new Date(t.fecha) : new Date();
+      return fecha.toISOString().slice(0,7) === mes;
+    });
   }
 
   // ==== GRÁFICOS ====
@@ -337,6 +351,7 @@ function iniciarApp() {
 
   document.getElementById('buscar').oninput = actualizarUI;
   document.getElementById('tipoFiltro').onchange = actualizarUI;
+  document.getElementById('mesFiltro').onchange = actualizarUI;
 
   // Añade select de categorías en el form:
   const categorias = ['Salario', 'Comida', 'Transporte', 'Ocio', 'Otros'];
