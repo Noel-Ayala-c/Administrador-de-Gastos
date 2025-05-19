@@ -40,6 +40,14 @@ function iniciarApp() {
   header.innerHTML = '<i class="fa-solid fa-wallet"></i> Gestor de Finanzas Personales';
   header.style.cssText = `text-align: center; color: #333; margin-bottom: 20px;`;
 
+  // Añade en tu header, después del título:
+  const darkModeBtn = document.createElement('button');
+  darkModeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+  darkModeBtn.style.cssText = `
+    position: absolute; right: 30px; top: 30px; background: none; border: none; font-size: 1.3em; cursor: pointer; color: #333;
+  `;
+  header.appendChild(darkModeBtn);
+
   const balanceDisplay = document.createElement('h3');
   balanceDisplay.textContent = 'Balance: S/ 0.00';
   balanceDisplay.style.cssText = `text-align: center; color: #2c3e50; font-size: 1.2em;`;
@@ -267,6 +275,33 @@ function iniciarApp() {
       }
     });
   }
+
+  // Lógica de modo oscuro
+  darkModeBtn.onclick = () => {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+  };
+  // Aplica modo oscuro si estaba activado
+  if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
+
+  // Añade este CSS global:
+  const style = document.createElement('style');
+  style.textContent = `
+    body.dark-mode {
+      background: #181a1b !important;
+      color: #f1f1f1 !important;
+    }
+    body.dark-mode div, body.dark-mode input, body.dark-mode form, body.dark-mode ul, body.dark-mode canvas {
+      background: #23272a !important;
+      color: #f1f1f1 !important;
+      border-color: #444 !important;
+    }
+    body.dark-mode button {
+      background: #444 !important;
+      color: #fff !important;
+    }
+  `;
+  document.head.appendChild(style);
 
   actualizarUI();
 }
