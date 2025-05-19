@@ -172,7 +172,7 @@ function iniciarApp() {
 
       li.innerHTML = `
         <span>
-          <strong>${t.descripcion}</strong><br>
+          <strong>${t.descripcion}</strong> <small style="color:#888;">(${t.categoria || 'Sin categoría'})</small><br>
           <small>
             <i class="fa-solid ${t.monto >= 0 ? 'fa-arrow-up' : 'fa-arrow-down'}"></i>
             S/ ${Math.abs(t.monto).toFixed(2)}
@@ -234,7 +234,8 @@ function iniciarApp() {
 
     transacciones.push({
       descripcion: desc,
-      monto: tipo === 'ingreso' ? monto : -monto
+      monto: tipo === 'ingreso' ? monto : -monto,
+      categoria: document.getElementById('categoria').value
     });
     guardarTransacciones();
     actualizarUI();
@@ -334,6 +335,15 @@ function iniciarApp() {
 
   document.getElementById('buscar').oninput = actualizarUI;
   document.getElementById('tipoFiltro').onchange = actualizarUI;
+
+  // Añade select de categorías en el form:
+  const categorias = ['Salario', 'Comida', 'Transporte', 'Ocio', 'Otros'];
+  form.querySelector('div').innerHTML += `
+    <select id="categoria" required style="flex:1; padding:12px; border-radius:8px; border:1px solid #ccc;">
+      <option value="">Categoría</option>
+      ${categorias.map(c => `<option value="${c}">${c}</option>`).join('')}
+    </select>
+  `;
 
   actualizarUI();
 }
