@@ -216,6 +216,7 @@ function iniciarApp() {
     guardarTransacciones();
     actualizarUI();
     form.reset();
+    showToast('Transacción agregada'); // Mostrar toast aquí
   };
 
   const btnIngreso = form.querySelector('#btn-ingreso');
@@ -240,6 +241,7 @@ function iniciarApp() {
     guardarTransacciones();
     actualizarUI();
     form.reset();
+    showToast('Transacción agregada'); // Mostrar toast aquí
   }
 
   // Filtros
@@ -344,6 +346,17 @@ function iniciarApp() {
       ${categorias.map(c => `<option value="${c}">${c}</option>`).join('')}
     </select>
   `;
+
+  // Toast
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:12px 24px;border-radius:8px;opacity:0;transition:opacity .4s;z-index:9999;';
+  document.body.appendChild(toast);
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.style.opacity = 1;
+    setTimeout(() => toast.style.opacity = 0, 2000);
+  }
 
   actualizarUI();
 }
