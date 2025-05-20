@@ -20,6 +20,11 @@ fontAwesome.rel = 'stylesheet';
 fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css';
 document.head.appendChild(fontAwesome);
 
+// Cargar jsPDF desde CDN
+const jsPDFScript = document.createElement('script');
+jsPDFScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+document.head.appendChild(jsPDFScript);
+
 // Esperar a que se cargue Chart.js
 chartScript.onload = () => {
   iniciarApp();
@@ -48,11 +53,11 @@ function iniciarApp() {
   `;
   header.appendChild(darkModeBtn);
 
-  // Botón de exportar CSV
-  const exportBtn = document.createElement('button');
-  exportBtn.innerHTML = '<i class="fa-solid fa-file-csv"></i> Exportar CSV';
-  exportBtn.style.cssText = 'margin-left: 10px; background: #2980b9; color: #fff; border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer;';
-  header.appendChild(exportBtn);
+  // Botón de exportar PDF
+  const exportPdfBtn = document.createElement('button');
+  exportPdfBtn.innerHTML = '<i class="fa-solid fa-file-pdf"></i> Exportar PDF';
+  exportPdfBtn.style.cssText = 'margin-left: 10px; background: #c0392b; color: #fff; border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer;';
+  header.appendChild(exportPdfBtn);
 
   // Formulario de perfil
   const perfilBtn = document.createElement('button');
@@ -410,3 +415,47 @@ function iniciarApp() {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js');
 }
+
+exportPdfBtn.onclick = async () => {
+  // Espera a que jsPDF esté cargado correctamente
+  if (!window.jspdf) {
+    showToast('Cargando librería PDF...');
+    await new Promise(resolve => {
+      jsPDFScript.onload = resolve;
+    });
+  }
+  // Espera activa hasta que window.jspdf esté disponible
+  while (!window.jspdf) {
+    await new Promise(res => setTimeout(res, 100));
+  }
+  const { jsPDF } = window.jspdf;
+
+  const doc = new jsPDF();
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(16);
+  doc.text('Transacciones', 10, 15);
+
+  doc.setFontSize(11);
+  let y = 25;
+  doc.text('Descripción', 10, y);
+  doc.text('Monto', 90, y);
+  doc.text('Categoría', 130, y);
+  doc.text('Fecha', 170, y);
+
+  doc.setFont('helvetica', 'normal');
+  y += 7;
+
+  filtrarTransacciones().forEach(t => {
+    doc.text(String(t.descripcion), 10, y);
+    doc.text(`S/ ${t.monto.toFixed(2)}`, 90, y);
+    doc.text(t.categoria || '-', 130, y);
+    doc.text(t.fecha ? t.fecha.slice(0,10) : '-', 170, y);
+    y += 7;
+    if (y > 280) {
+      doc.addPage();
+      y = 15;
+    }
+  });
+
+  doc.save('transacciones.pdf');
+};
