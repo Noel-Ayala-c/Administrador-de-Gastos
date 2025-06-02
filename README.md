@@ -6,8 +6,8 @@ Este proyecto es una aplicación web sencilla para llevar el control de tus gast
 
 Puedes acceder a la aplicación desde el siguiente enlace:
 
-🔗 [Ver la aplicación en línea]([https://tusitio.com](https://gestor-de-finanzas-personales.netlify.app/))  
-*(Reemplaza este enlace con el real)*
+🔗 [Ver la aplicación en línea]([https://gestor-de-finanzas-personales.netlify.app/])  
+
 
 ---
 
