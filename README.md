@@ -6,7 +6,7 @@ Este proyecto es una aplicación web sencilla para llevar el control de tus gast
 
 Puedes acceder a la aplicación desde el siguiente enlace:
 
-🔗 [Ver la aplicación en línea]([https://gestor-de-finanzas-personales.netlify.app/])  
+🔗 [Ver la aplicación en línea][https://gestor-de-finanzas-personales.netlify.app/]
 
 
 ---
@@ -38,13 +38,3 @@ Administrador de Gastos/
 - LocalStorage para persistencia de datos
 
 ---
-
-## 🧑‍💻 Cómo Ejecutar el Proyecto Localmente
-
-1. Clona el repositorio o descarga los archivos.
-2. Abre el archivo `index.html` en tu navegador web.
-
-```bash
-git clone https://github.com/tuusuario/administrador-gastos.git
-cd administrador-gastos
-start index.html
